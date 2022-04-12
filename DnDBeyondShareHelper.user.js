@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DnDBeyond Campage Share Helper
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  automatically kicks characters that are inside a campagne for too long
 // @author       Linkally
 // @match        https://www.dndbeyond.com/campaigns/*
@@ -49,7 +49,7 @@
                 {
                     toDelete = i;
                 }
-                else if (chars[idx] && chars[idx]+10*60*1000 < Date.now())
+                else if (chars[idx] && chars[idx]+20*60*1000 < Date.now())
                 {
                     toDelete = i;
                 }
@@ -83,16 +83,25 @@
             if (toDelete !== null) {
                 cards[toDelete].getElementsByClassName("ddb-campaigns-character-card-footer-links-item-more-remove")[0].click();
                 delete chars[curChars[toDelete]];
+
+                let min = 2,
+                    max = 4;
+                let rand = Math.floor(Math.random() * (max - min + 1) + min);
+
                 setTimeout(() => {
                     GM_setValue(campagneID + "chars", chars);
                     document.getElementsByClassName("ajax-post")[0].click();
-                }, 2000);
+                }, rand*1000);
             }
+
+            let min = 6,
+                max = 10;
+            let rand = Math.floor(Math.random() * (max - min + 1) + min);
 
             intervall = setTimeout(() => {
                 GM_setValue(campagneID + "chars", chars);
                 location.reload();
-            }, 60*1000);
+            }, rand*60*1000);
         }
         else if(intervall)
         {
